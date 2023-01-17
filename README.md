@@ -26,9 +26,10 @@ title: 쿠폰 선착순 이벤트
 <br>
 
 ### 실행 방법
-```python
+```zsh
 $ python3 venv env
 $ pip install -r requirements.txt
 
 $ uvicorn src.apps.task.app:APP --reload
+$ sh ./scripts/runserver.sh  # 스크립트로 실행 가능
 ```

@@ -1,0 +1,1 @@
+uvicorn src.apps.task.app:APP --reload

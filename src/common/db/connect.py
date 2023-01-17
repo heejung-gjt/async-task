@@ -4,7 +4,7 @@ from typing import Dict
 from asyncpg import create_pool
 from asyncpg.pool import Pool
 
-from apps.task.conf import settings
+from src.apps.task.conf import settings
 
 
 class PoolCreate:
