@@ -22,10 +22,11 @@ title: 쿠폰 선착순 이벤트
 - Python 3.11
 - FastAPI
 - Postgresql (RDS)
+- redis-server 7.0.7
 
 <br>
 
-### 실행 방법
+### 서버 실행 방법
 ```zsh
 $ python3 venv env
 $ pip install -r requirements.txt
@@ -33,3 +34,39 @@ $ pip install -r requirements.txt
 $ uvicorn src.apps.task.app:APP --reload
 $ sh ./scripts/runserver.sh  # 스크립트로 실행 가능
 ```
+
+<br>
+
+### 실행 방법
+```zsh
+$ redis-server  # redis 실행
+$ python main.py  # src/apps/task/api/coupon/main.py 실행 (client)
+$ sh ./scripts/runserver.sh  # 서버 실행
+```
+
+** 실행에 필요한 환경변수
+```text
+MAIN_DB_HOST=
+MAIN_DB_PORT=5432
+MAIN_DB_DATABASE=
+MAIN_DB_USER=
+MAIN_DB_PASSWORD=
+
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_DATABASE=0
+```
+
+<br>
+
+### 과정
+
+- redis 큐에 요청온 username 순차적으로 저장
+- redis 큐 size 체크 후 100 이하인 경우 랜덤하게 발급한 쿠폰 부여
+- DB에 저장
+- 큐 size 100 초과하는 경우 쿠폰 소진 메시지 반환
+
+<br>
+
+- Q&A. 쿠폰 랜덤 발급시 async 함수이기 때문에 쿠폰 발급 함수 -> redis 큐 함수 사용이 불가능 -> 쿠폰 중복처리가 완벽하지 못함
+- Q&A. FOR UPDATE lock 으로도 100명을 카운트 할 수는 있지만 쿠폰 중복처리가 애매함
