@@ -20,7 +20,7 @@ class RedisQueue(object):
         return self.rq.set(name, element)
 
     def size(self):  # 큐 크기 확인
-        return self.rq.llen(self.key) + 1
+        return self.rq.llen(self.key)
 
     def delete(self):
         return self.rq.flushdb()

@@ -1,14 +1,38 @@
-import string_utils
-
 from datetime import datetime
+
+import string_utils
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from src.common.db.connect import connection, transaction
 from src.common.core.redis_config import redis_config
+from src.common.db.connect import connection, transaction
 
 router = APIRouter()
+
+
+import logging
+
+# 로그 생성
+logger = logging.getLogger()
+
+# 로그의 출력 기준 설정
+logger.setLevel(logging.INFO)
+
+# log 출력 형식
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+# log 출력
+stream_handler = logging.StreamHandler()
+stream_handler.setFormatter(formatter)
+logger.addHandler(stream_handler)
+
+# log를 파일에 출력
+file_handler = logging.FileHandler('/var/log/async')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
+
+
 
 
 async def run(self, data):
@@ -84,19 +108,21 @@ async def _save_coupon_info(username, coupon):
     description="",
 )
 async def get_random_coupon(data: UserInfoReq):
-
     rd = redis_config()
+    rd.put(data.username)
     size = rd.size()
-    if rd.size() > 100:
+    if rd.size() >= 5:
         is_success = "Fail"
         coupon_number = "쿠폰 소진"
         username = data.username
     else:
-        rd.put(data.username)
+        # rd.put(data.username)
         coupon_number = await _get_random_coupon_number(rd)
         await _save_coupon_info(data.username, coupon_number)
         is_success = "Success"
         username = data.username
+
+    logger.info(f"username: {data.username}, queue_size: {rd.size}")
 
 
     return JSONResponse(

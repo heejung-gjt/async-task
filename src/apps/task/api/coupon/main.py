@@ -1,7 +1,8 @@
-import aiohttp
 import asyncio
 import random
 from typing import List
+
+import aiohttp
 
 
 async def make_random_username() -> List[dict]:
@@ -11,7 +12,7 @@ async def make_random_username() -> List[dict]:
     user_list: List[dict] = []
     cnt = 0
     while True:
-        if len(user_list) >= 150:
+        if len(user_list) >= 10:
             break
         cnt += 1
         rand_username = "user_"
