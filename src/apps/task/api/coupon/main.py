@@ -12,7 +12,7 @@ async def make_random_username() -> List[dict]:
     user_list: List[dict] = []
     cnt = 0
     while True:
-        if len(user_list) >= 10:
+        if len(user_list) >= 150:
             break
         cnt += 1
         rand_username = "user_"
@@ -32,22 +32,22 @@ async def make_random_username() -> List[dict]:
     return user_list
 
 
-async def call_async_api(session, username):
-    """
-    쿠폰 랜덤으로 부여하는 API 호출하는 함수
-    """
-    data = {'username': username}
-    async with session.post(
-        url="http://127.0.0.1:8000/api/coupon", json=data) as response:
-        res = await response.json()
+# async def call_async_api(session, username):
+#     """
+#     쿠폰 랜덤으로 부여하는 API 호출하는 함수
+#     """
+#     data = {'username': username}
+#     async with session.post(
+#         url="http://127.0.0.1:8000/api/coupon", json=data) as response:
+#         res = await response.json()
 
-        return res
+#         return res
 
 
 async def call_api(username):
     data = {'username': username}
     async with aiohttp.ClientSession() as session:
-        async with session.post(url='http://127.0.0.1:8000/api/coupon', json=data) as res:
+        async with session.post(url='http://13.125.227.248/api/coupon', json=data) as res:
             result = await res.json()
 
     return result
